@@ -5,6 +5,7 @@ import model.Developers;
 import model.Projects;
 import model.Skills;
 import repository.DevelopersRepository;
+import repository.util.ConnectionUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,14 +17,14 @@ public class JdbcDevelopersRepositoryImpl implements DevelopersRepository {
     public void save(Developers developers) {
         Statement statement;
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             statement.executeQuery("INSERT INTO developers (id,name,skills,projects,companies)"+ " VALUES ("
                     + developers.getId()+"," + developers.getName()+","+developers.getSkill()+","
                     + developers.getProject()+"," + developers.getProject()+")"
             );
 
         } catch (SQLException e) {
-            System.out.println("Failed to get statement in method save.");
+            System.out.println("IN save - error occurred trying to save developer");
         }
 
 
@@ -32,7 +33,7 @@ public class JdbcDevelopersRepositoryImpl implements DevelopersRepository {
     public void update(Developers developers) {
           Statement statement;
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             statement.executeQuery("UPDATE  developers (id,name,skills,projects,companies)"+ " SET ("
                     + developers.getId()+"," + developers.getName()+","+developers.getSkill()+","
                     + developers.getProject()+"," + developers.getProject()+")");
@@ -45,15 +46,15 @@ public class JdbcDevelopersRepositoryImpl implements DevelopersRepository {
     public boolean delete(Long id) {
         Statement statement;
         try {
-             statement = JDBC.getConnection().createStatement();
+             statement = ConnectionUtil.getConnection().createStatement();
             statement.executeQuery("DELETE FROM developers WHERE id = "+id);
 
         } catch (SQLException e) {
-            System.out.println("Failed to get statement in method delete.");
+            System.out.println("IN save - error occurred trying to delete developer");
 
             return false;
             }
-        JDBC.close();
+        ConnectionUtil.close();
         return true;
         }
 
@@ -64,7 +65,7 @@ public class JdbcDevelopersRepositoryImpl implements DevelopersRepository {
         Projects project= null;
         Companies companies= null;
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM developers WHERE id = "+ id);
             while(resultSet.next()){
                 name = resultSet.getString("name");
@@ -87,7 +88,7 @@ public class JdbcDevelopersRepositoryImpl implements DevelopersRepository {
         Projects project;
         Companies companies;
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM developers");
             while(resultSet.next()){
                 id = resultSet.getLong("id");

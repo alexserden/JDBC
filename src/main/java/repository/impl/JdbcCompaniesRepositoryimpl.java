@@ -2,6 +2,7 @@ package repository.impl;
 
 import model.Companies;
 import repository.CompaniesRepository;
+import repository.util.ConnectionUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,13 +15,13 @@ public class JdbcCompaniesRepositoryImpl implements CompaniesRepository {
     public void save(Companies companies) {
         Statement statement;
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             statement.executeQuery("INSERT INTO companies (id,name)"+ " VALUES ("
                     + companies.getId()+"," + companies.getName()+")"
             );
 
         } catch (SQLException e) {
-            System.out.println("Failed to get statement in method save.");
+            System.out.println("IN save - error occurred trying to save companies");
         }
 
 
@@ -29,7 +30,7 @@ public class JdbcCompaniesRepositoryImpl implements CompaniesRepository {
     public void update(Companies companies) {
         Statement statement;
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             statement.executeQuery("UPDATE  companies (id,name)"+ " SET ("
                     + companies.getId()+"," + companies.getName()+")");
         } catch (SQLException e) {
@@ -40,15 +41,15 @@ public class JdbcCompaniesRepositoryImpl implements CompaniesRepository {
     public boolean delete(Long id) {
         Statement statement;
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             statement.executeQuery("DELETE FROM companies WHERE id = "+id);
 
         } catch (SQLException e) {
-            System.out.println("Failed to get statement in method delete.");
+            System.out.println("IN save - error occurred trying to delete companies");
 
             return false;
         }
-        JDBC.close();
+        ConnectionUtil.close();
         return true;
     }
 
@@ -56,7 +57,7 @@ public class JdbcCompaniesRepositoryImpl implements CompaniesRepository {
         Statement statement;
         String name = "";
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM companies WHERE id = "+ id);
             while(resultSet.next()){
                 name = resultSet.getString("name");
@@ -73,7 +74,7 @@ public class JdbcCompaniesRepositoryImpl implements CompaniesRepository {
         Long id;
         String name;
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM developers");
             while(resultSet.next()){
                 id = resultSet.getLong("id");

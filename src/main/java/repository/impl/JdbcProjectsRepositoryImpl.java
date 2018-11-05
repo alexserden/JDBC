@@ -1,6 +1,7 @@
 package repository.impl;
 
 import model.Projects;
+import repository.util.ConnectionUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,18 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcProjectsRepositoryImpl {
-    public void save(Projects skills) {
+    public void save(Projects projects) {
         Statement statement;
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             statement.executeQuery("INSERT INTO projects (id,name)"+ " VALUES ("
-                    + skills.getId()+"," + skills.getName()+")"
+                    + projects.getId()+"," + projects.getName()+")"
             );
 
         } catch (SQLException e) {
-            System.out.println("Failed to get statement in method save.");
+            System.out.println("IN save - error occurred trying to save projects");
         }
-        JDBC.close();
+        ConnectionUtil.close();
 
 
     }
@@ -28,27 +29,27 @@ public class JdbcProjectsRepositoryImpl {
     public void update(Projects projects) {
         Statement statement;
         try {
-            statement = JDBC.getConnection().createStatement();
-            statement.executeQuery("UPDATE  skills (id,name)"+ " SET ("
+            statement = ConnectionUtil.getConnection().createStatement();
+            statement.executeQuery("UPDATE  projects (id,name)"+ " SET ("
                     + projects.getId()+"," + projects.getName()+")");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        JDBC.close();
+        ConnectionUtil.close();
     }
 
     public boolean delete(Long id) {
         Statement statement;
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             statement.executeQuery("DELETE FROM projects WHERE id = "+id);
 
         } catch (SQLException e) {
-            System.out.println("Failed to get statement in method delete.");
+            System.out.println("IN save - error occurred trying to delete projects");
 
             return false;
         }
-        JDBC.close();
+        ConnectionUtil.close();
         return true;
     }
 
@@ -56,7 +57,7 @@ public class JdbcProjectsRepositoryImpl {
         Statement statement;
         String name = "";
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM projects WHERE id = "+ id);
             while(resultSet.next()){
                 name = resultSet.getString("name");
@@ -65,7 +66,7 @@ public class JdbcProjectsRepositoryImpl {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        JDBC.close();
+        ConnectionUtil.close();
         return new Projects(id,name);
     }
 
@@ -75,7 +76,7 @@ public class JdbcProjectsRepositoryImpl {
         Long id;
         String name;
         try {
-            statement = JDBC.getConnection().createStatement();
+            statement = ConnectionUtil.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM projects");
             while(resultSet.next()){
                 id = resultSet.getLong("id");

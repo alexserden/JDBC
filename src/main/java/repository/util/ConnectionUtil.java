@@ -1,10 +1,10 @@
-package repository.impl;
+package repository.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class JDBC {
+public class ConnectionUtil {
    private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
    private static final String DATA_BASE_URL = "jdbc:mysql://localhost/developers";
    private static final String USER = "root";
